@@ -1,0 +1,19 @@
+***There will 2 ends in a web-database architecture, front-end and back-end
+
+** Front-end 
+    - Tokenizer
+    - Parser
+    - Code generator
+
+** Back-end 
+    - Virtual machine
+    - B-tree 
+    - Pager 
+    - OS-interface
+
+
+- Tokenizer: 'Bison' is the tokenizer used for SQLite. Won't build a tokenizer by myself cause it is quite simple. Many think of tokenizer as complex compilers
+but in its simpliest for, a tokenizer is kinda like a calculator. <variable> would be the input numbers with <operators> tokens being [+,-,*,/].
+    + Sadly, knowing this won't make learning how use Bison easier :<
+    + Refernce resource: https://www.youtube.com/watch?v=bxpc9Pp5pZM
+    + Just a dude introducing Bison: https://www.youtube.com/watch?v=POjnw0xEVas
