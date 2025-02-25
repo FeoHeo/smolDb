@@ -1,0 +1,14 @@
+**TODO - or task break down
+- Write a simple parser (no need to be complicated, just a single digit, four function calc would do)
+    + Write parser in Bison first
+        ~ Write the handler 
+    + Move to using Flex as parser 
+
+**End of TODO
+
+- So there are 2 ways to read and parse inputs to tokenizer. Either by using Flex or just write the parser in Bison. Apparently Flex is easier
+and better to use.
+    + However, I'll write a simple one in Bison first just to see how it works (understanding the shortcomings of an approach is good knowledge)
+    + ungetc() pushes the character back to the input stream
+        ~ one use case of this is when you compare first digit before reading it from stream like 'if(isdigits(c))' then 'scanf()' will likely miss
+        some numbers cause that number were used for comparison, pushing it back to the stream ensure that the full number can be read 

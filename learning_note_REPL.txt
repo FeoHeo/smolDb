@@ -1,4 +1,5 @@
 ***There will 2 ends in a web-database architecture, front-end and back-end
+- The REPL part is just the prompter for the database
 
 ** Front-end 
     - Tokenizer
@@ -17,3 +18,21 @@ but in its simpliest for, a tokenizer is kinda like a calculator. <variable> wou
     + Sadly, knowing this won't make learning how use Bison easier :<
     + Refernce resource: https://www.youtube.com/watch?v=bxpc9Pp5pZM
     + Just a dude introducing Bison: https://www.youtube.com/watch?v=POjnw0xEVas
+
+
+- The '%left' specify left associativity, '%right' sepcify right associativity.
+    + For example, the data tree in https://www.youtube.com/watch?v=bxpc9Pp5pZ - a computerphile vid at around 13:49.
+    + For a calculation of "8 / 4 / 2" in a simple calculator, %left will do (8/4) / 2 but %right will do 8 / (4/2) which gives 2 different results
+    + For calculator, use %left for simpliscity, we will see how this goes when the program grows
+
+- Program precedence.
+    + If you declare    "%left '*' '/'
+                         %left '+' '-'" then there will be false calculation
+
+    + Instead do    "%left '+' '-'
+                     %left '*' '/'" which is the reversed of the above, this would ensure that * and / gets to run first before + and -
+
+    + If you want '^' then use '%right'
+
+- Learning note for parser and tokenizer will be continued in 'Bison/learning_notes_parser.txt'
+                     
