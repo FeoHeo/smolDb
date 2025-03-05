@@ -35,4 +35,11 @@ but in its simpliest for, a tokenizer is kinda like a calculator. <variable> wou
     + If you want '^' then use '%right'
 
 - Learning note for parser and tokenizer will be continued in 'Bison/learning_notes_parser.txt'
+
+
+- C typecasting. Like 'x = (float)a/b' will give float output whereas 'x1 = a/b' will give int output.
+Use typecasting when you explicitly need to ensure the output type (lower data types like int can be
+upgraded to more complex types like float with little overhead - I think).
+    + I used this to ensrue that malloc() will return struct ptr after making space for the actual struct
+    like 'structExample *x = (structExample *)malloc(sizeof(structExample))'
                      

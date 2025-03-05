@@ -1,0 +1,5 @@
+One thing in which you could do to ensure more reliable connection:
+    + Make a hotspot config on your PC
+    + Configure Pi so it would connect to your PC's hotspot 
+    + Right now, the hotspot config on Pi is not the default config 
+

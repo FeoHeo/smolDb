@@ -40,5 +40,31 @@ int yylex (void) {
         c = getchar ();
     }   // Skip whitespace and tabs
 
-    if (c == '.' || isdigits(c))
+    if (c == '.' || isdigit(c)) {
+        ungetc(c , stdin);
+        if(scanf("%lf" , &yylval) != 1) { // yylval stores the value of token before passing to parser
+            abort();
+        } 
+        return NUM;
+    } else if(c == EOF) {   // Return end of input
+        return YYEOF;
+    } else {
+        return c;
+    }
+}
+
+int main (void)     // controllling function, this is currently kept to bare minimum
+{
+  return yyparse ();
+}
+
+
+
+#include <stdio.h>
+
+/* Called by yyparse on error. */
+void
+yyerror (char const *s)
+{
+  fprintf (stderr, "%s\n", s);
 }

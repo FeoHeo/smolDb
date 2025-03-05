@@ -4,6 +4,28 @@
         ~ Write the handler 
     + Move to using Flex as parser 
 
+- Optimize the calc.y so that you don't need to handle every mixed case of "int op float"
+    + Check for 2 inputs before every operation -> if any of the two variable input is a float then parse the other one as float 
+    + If you finished with that then you could do the opposite. If the float can be soft rounded then change it to int (like 4.0000 to 4)
+    +Right now I'm confused about %union. I already know that yylval holds the value of $1 and $2
+    for calculation but not sure why when I store value in ival then it's not calculated even tho they are in the same union 
+        -> Answer: ival is of expression type and fval is of mixed_expression type
+    + Switched to using only 1 type temporarily as arithmetic ops on C that uses double and int will output double 
+    + Only thing left is to make it so that int on int will output another int
+    + One possible thing is to parse as T_INT first and if the numbers did not satisfy, call mixed_expression
+    inside the expression parser (So if there is no other cases 2 expression present like 'exp op exp' 
+    + Tried calling mixed_exp from normal exp. Results are still the same, suppose that mixed is still being scanned and stored 
+    inside fval. One issue arise with this is how to store the value of exp into mixed_exp, right now I think I'm doing the reverse of that
+    then call 'mixed_exp' so that the mixed operation will be use to handle the mix)
+
+    + So right now I have ival = $1 ; exp = $$. I want to call mixed_exp and do fval = float($1) or mixed_exp = float($1)
+    + So what the parser do when I call exp : T_INT is to go to scanned value of T_INT and append that to $1.
+    still unsure why this can't be applied to  calling mixed_exp tho
+    +Successfully called mixed_exp from exp. All I need to do was to comment out mixed_exp on 'line' parser from, above
+    +One issue remained, I can't output double as exp is a int token, might try reverse and call exp from mixed_exp
+    +Completion condition: If input '1+1' then return type must be int. If input '1.1+1' then return type must be double.
+    another thing is that I can call exp on mixed_exp and do operation on that (both ways)
+    + One more way to do this is parse mixed_exp and exp as one singular token 
 **End of TODO
 
 - So there are 2 ways to read and parse inputs to tokenizer. Either by using Flex or just write the parser in Bison. Apparently Flex is easier
@@ -12,3 +34,31 @@ and better to use.
     + ungetc() pushes the character back to the input stream
         ~ one use case of this is when you compare first digit before reading it from stream like 'if(isdigits(c))' then 'scanf()' will likely miss
         some numbers cause that number were used for comparison, pushing it back to the stream ensure that the full number can be read 
+
+- Parser is basically a function named 'yyparse()'
+    + Documentation for Bison in C language: https://www.gnu.org/software/bison/manual/bison.html#Interface
+
+- To clear up some confusion about the calculator (and possibly learn more about the order of calculations):
+    INPUT: 3 7 + 3 4 5 *+-
+    OUTPUT: -13
+    EXPLAINATION: This translates to -> (3+7) - (3+4*5) = -13
+    + So the operation is done by grouping the 2 right-most numbers for * and /. 2 lefyt-most for + and -
+    + If you wanted to do () -> All calculations coming to the left of the operation are grouped 
+        ~ For example: "1 1 - 2 *" would be "(1-1)*2"
+- On the tutorial video: https://www.youtube.com/watch?v=fFRxWtRibC8
+    + If you take a look at 9:44 and then take a look at the flex-bison-example/calc.y.
+        ~ You could actually optimize the parser more to accept and transfer Flot -> Int and Int -> Float
+        ~ Demonstrate understanding of the parser by optimizing calc.y
+    +At 20:44: This is what you might need to specify if your program
+    is not accepting more than 1 inputs
+
+- Another token which is '%precedence' can be used to parse things such as a negative number into the parser
+    + INPUT: 1-2*3
+    + The parser will need to figure out whther to shift to next token and push * to stack first or compute (1-2). However, if the * is replaced
+    by '<' (lesser than) operation then (1-2) would need to compute first (the current issue is to know whether to compute (1-2) or parse next token first)
+    + Precendence: Like in rpcacl you defined '*' after '+' and thus '*' is executed first
+    + Associativity: To determine whether to calculate 1^2^3 as (1^2)^3 or 1^(2^3)
+    + The special token '%nonassoc' prohibit the use of multiple of its own token. So you could only use 1 %nonassoc of that precedence (or priority level)
+    per input (so multiple %nonassoc is fine as long as they are in different priority level)
+
+    /* { printf("\tResult from mixed: %f - %i\n", $1 , $1);}*/
